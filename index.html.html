@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>朝活ログ150 v5</title>
+<style>
+:root{
+  --bg:#f4fff1; --card:#ffffff; --main:#65d45e; --main2:#8ee889; --dark:#163d21;
+  --muted:#67806b; --line:#d7f2d2; --danger:#d9534f; --shadow:0 10px 28px rgba(22,61,33,.10);
+}
+*{box-sizing:border-box} body{margin:0;background:linear-gradient(180deg,#f4fff1,#fbfffa);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;color:var(--dark);}
+header{position:sticky;top:0;z-index:10;background:rgba(244,255,241,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:18px 18px 12px;}
+h1{font-size:24px;margin:0;font-weight:900}.sub{color:var(--muted);font-size:13px;margin-top:4px}.wrap{max-width:920px;margin:0 auto;padding:16px 14px 110px}.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:18px;margin:14px 0;box-shadow:var(--shadow)}
+h2{font-size:21px;margin:0 0 14px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{background:#f7fff5;border:1px solid var(--line);border-radius:18px;padding:13px}.stat b{display:block;font-size:24px}.stat span{font-size:12px;color:var(--muted)}
+.tabs{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:99}.tab{border:0;background:transparent;color:#47634c;font-weight:800;padding:9px 2px;border-radius:14px;font-size:12px}.tab.active{background:#dcffd8;color:#15551d}.page{display:none}.page.active{display:block}
+label{font-weight:800;font-size:14px;display:block;margin:12px 0 6px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}input,textarea,select{width:100%;border:1px solid var(--line);border-radius:16px;padding:13px;background:#fff;color:var(--dark);font-size:16px}textarea{min-height:92px;resize:vertical}.checkgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.check{display:flex;align-items:center;gap:8px;background:#f7fff5;border:1px solid var(--line);border-radius:16px;padding:12px;font-weight:800}.check input{width:22px;height:22px}.btn{border:0;border-radius:18px;padding:14px 16px;font-weight:900;font-size:16px;background:var(--main);color:#0e3a15}.btn.secondary{background:#e9fbe7;color:#16401f}.btn.danger{background:#ffe7e6;color:#8f1d19}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.full{width:100%}.small{font-size:12px;color:var(--muted)}
+.item{border:1px solid var(--line);border-radius:18px;padding:14px;margin:10px 0;background:#fff}.itemTop{display:flex;justify-content:space-between;gap:10px}.pill{display:inline-block;background:#e5ffe2;color:#18551f;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:900;margin:3px}.hidden{display:none!important}table{width:100%;border-collapse:collapse;font-size:13px}td,th{border-bottom:1px solid var(--line);padding:8px;text-align:left}.notice{background:#fff7d6;border:1px solid #ffe49a;border-radius:16px;padding:12px;color:#6a4d00}.editLabel{display:flex;align-items:center;justify-content:space-between}.pen{border:0;background:#ecffe9;border-radius:999px;padding:5px 8px;font-size:14px}.bar{height:12px;background:#e6f7e3;border-radius:999px;overflow:hidden}.bar>div{height:100%;background:var(--main);width:0%}pre{white-space:pre-wrap;background:#f7fff5;border:1px solid var(--line);border-radius:16px;padding:12px;color:#183d20}
+@media(min-width:720px){.grid{grid-template-columns:repeat(4,1fr)}.checkgrid{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<header><h1>🌱 朝活ログ150 v5</h1><div class="sub">2026/06/14から使う本番版｜保存はこのブラウザ内</div></header>
+<div class="wrap">
+<section id="home" class="page active">
+ <div class="card"><h2>🌱 今月の積み上げダッシュボード</h2><div id="monthlyStats" class="grid"></div><p class="small">英語・読書は時間管理。まずは入力できる・保存できるを最優先。</p></div>
+ <div class="card"><h2>🏆 今月のベスト記録</h2><div id="bestStats"></div></div>
+ <div class="card"><h2>📈 今月の推移</h2><div class="bar"><div id="monthBar"></div></div><p id="monthBarText" class="small"></p></div>
+ <div class="card"><h2>📝 月次ふり返りメモ</h2><textarea id="monthMemo" placeholder="今月うまくいっていること、150日目に向けて試したいこと"></textarea><div class="actions"><button class="btn secondary" onclick="saveMemo()">メモ保存</button></div></div>
+</section>
+<section id="input" class="page">
+ <form id="logForm" class="card"><h2 id="formTitle">今日の入力</h2><input type="hidden" id="editId" />
+  <div class="row"><div><label>保存日</label><input type="date" id="date" required></div><div><label>起床時間</label><input type="time" id="wakeTime"></div></div>
+  <div class="row"><div><label>朝活日目</label><input type="number" id="morningDay" inputmode="numeric"></div><div><label>禁煙日目</label><input type="number" id="noSmokeDay" inputmode="numeric"></div></div>
+  <h2>起動ルーティン</h2><div class="checkgrid" id="routineChecks"></div>
+  <h2>筋トレ</h2><div class="row3"><div><label>舌ぐるぐる</label><input type="number" id="tongue" inputmode="numeric"></div><div><label>スクワット</label><input type="number" id="squat" inputmode="numeric"></div><div><label>腕立て</label><input type="number" id="pushup" inputmode="numeric"></div></div>
+  <div class="row"><div><label>腹筋</label><input type="number" id="situp" inputmode="numeric"></div><div><label>背筋</label><input type="number" id="back" inputmode="numeric"></div></div>
+  <h2>英語・読書</h2><div class="row"><div><label>英語時間（分）</label><input type="number" id="englishMin" inputmode="numeric" placeholder="例：15"></div><div><label>読書時間（分）</label><input type="number" id="readingMin" inputmode="numeric" placeholder="例：20"></div></div>
+  <div class="row"><div><label>英語メモ</label><input id="englishMemo" placeholder="記事/音読/単語など"></div><div><label>読書メモ</label><input id="readingMemo" placeholder="本の名前/気づきなど"></div></div>
+  <h2>発信</h2><div class="checkgrid"><label class="check"><input type="checkbox" id="postedX">X投稿</label><label class="check"><input type="checkbox" id="postedStory">ストーリー</label><label class="check"><input type="checkbox" id="postedNote">note</label></div>
+  <h2>ヘルスチェック</h2><div class="row3"><div><label>体重kg</label><input type="number" step="0.1" id="weight"></div><div><label>体脂肪%</label><input type="number" step="0.1" id="fat"></div><div><label>骨格筋率%</label><input type="number" step="0.1" id="muscle"></div></div>
+  <div class="row3"><div><label>体年齢</label><input type="number" id="bodyAge"></div><div><label>基礎代謝</label><input type="number" id="bmr"></div><div><label>BMI</label><input type="number" step="0.1" id="bmi"></div></div>
+  <label>朝活ログ</label><textarea id="logText" placeholder="今日の一言。崩れても戻る。"></textarea>
+  <div class="actions"><button type="submit" class="btn full">保存する</button><button type="button" class="btn secondary" onclick="resetForm()">新規入力に戻す</button></div>
+ </form>
+</section>
+<section id="history" class="page"><div class="card"><h2>履歴</h2><div id="historyList"></div></div></section>
+<section id="post" class="page"><div class="card"><h2>X投稿たたき台</h2><p class="small">最新ログから生成。文面はあとでクラタロ仕様に調整。</p><pre id="xText"></pre><div class="actions"><button class="btn" onclick="copyX()">コピー</button><button class="btn secondary" onclick="generateX()">再生成</button></div></div></section>
+<section id="backup" class="page"><div class="card"><h2>バックアップ</h2><div class="notice">iPhoneのブラウザ保存は消える可能性あり。週1でCSV出力推奨。</div><div class="actions"><button class="btn" onclick="exportCSV()">CSV出力</button><label class="btn secondary">CSV読込<input type="file" accept=".csv" onchange="importCSV(event)" class="hidden"></label><button class="btn danger" onclick="clearAll()">全削除</button></div><h2>項目名編集</h2><p class="small">ペンマーク簡易版。まずはルーティン名を編集可能。</p><div id="labelSettings"></div></div></section>
+</div>
+<nav class="tabs"><button class="tab active" data-page="home">ホーム</button><button class="tab" data-page="input">入力</button><button class="tab" data-page="history">履歴</button><button class="tab" data-page="post">X文</button><button class="tab" data-page="backup">保存</button></nav>
+<script>
+const KEY='kurataro_morning_log_v5'; const LABEL_KEY='kurataro_morning_labels_v5'; const MEMO_KEY='kurataro_month_memo_v5';
+const defaultLabels={bed:'ベッドメイク',curtain:'カーテンオープン',hotwater:'白湯',tongueDone:'舌ぐるぐる',training:'筋トレ',pray:'瞑想・お祈り',protein:'青汁 or プロテイン',wash:'寝癖直し・洗顔',health:'ヘルスチェック'};
+let labels=JSON.parse(localStorage.getItem(LABEL_KEY)||'null')||defaultLabels;
+function load(){return JSON.parse(localStorage.getItem(KEY)||'[]')}
+function save(data){localStorage.setItem(KEY,JSON.stringify(data))}
+function todayISO(){const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function num(id){const v=document.getElementById(id).value; return v===''?'':Number(v)}
+function val(id){return document.getElementById(id).value}
+function chk(id){return document.getElementById(id).checked?1:0}
+function setv(id,v){document.getElementById(id).value=v??''} function setc(id,v){document.getElementById(id).checked=!!v}
+function renderRoutine(){const box=document.getElementById('routineChecks'); box.innerHTML=''; Object.entries(labels).forEach(([k,name])=>{box.insertAdjacentHTML('beforeend',`<label class="check"><input type="checkbox" id="${k}">${name}</label>`)});}
+function initTabs(){document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>showPage(b.dataset.page));}
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.page===id)); if(id==='home')renderHome(); if(id==='history')renderHistory(); if(id==='post')generateX(); if(id==='backup')renderSettings(); window.scrollTo(0,0)}
+function handleSubmit(e){e.preventDefault(); const data=load(); const editId=val('editId'); const item={id:editId||String(Date.now()),savedAt:new Date().toISOString(),date:val('date'),wakeTime:val('wakeTime'),morningDay:num('morningDay'),noSmokeDay:num('noSmokeDay'),routine:{},tongue:num('tongue'),squat:num('squat'),pushup:num('pushup'),situp:num('situp'),back:num('back'),englishMin:num('englishMin'),readingMin:num('readingMin'),englishMemo:val('englishMemo'),readingMemo:val('readingMemo'),postedX:chk('postedX'),postedStory:chk('postedStory'),postedNote:chk('postedNote'),weight:num('weight'),fat:num('fat'),muscle:num('muscle'),bodyAge:num('bodyAge'),bmr:num('bmr'),bmi:num('bmi'),logText:val('logText')}; Object.keys(labels).forEach(k=>item.routine[k]=chk(k)); const idx=data.findIndex(x=>x.id===editId); if(idx>=0)data[idx]=item; else data.unshift(item); save(data); alert('保存しました🌱'); resetForm(); renderHome(); showPage('home');}
+function resetForm(){document.getElementById('logForm').reset(); setv('date',todayISO()); setv('editId',''); document.getElementById('formTitle').textContent='今日の入力';}
+function editItem(id){const item=load().find(x=>x.id===id); if(!item)return; setv('editId',item.id); setv('date',item.date); setv('wakeTime',item.wakeTime); setv('morningDay',item.morningDay); setv('noSmokeDay',item.noSmokeDay); Object.keys(labels).forEach(k=>setc(k,item.routine&&item.routine[k])); ['tongue','squat','pushup','situp','back','englishMin','readingMin','englishMemo','readingMemo','weight','fat','muscle','bodyAge','bmr','bmi','logText'].forEach(k=>setv(k,item[k])); setc('postedX',item.postedX); setc('postedStory',item.postedStory); setc('postedNote',item.postedNote); document.getElementById('formTitle').textContent='履歴を編集'; showPage('input')}
+function deleteItem(id){if(!confirm('このログを削除しますか？'))return; save(load().filter(x=>x.id!==id)); renderHistory(); renderHome();}
+function renderHistory(){const box=document.getElementById('historyList'); const data=load(); if(!data.length){box.innerHTML='<p class="small">まだログがありません。</p>';return;} box.innerHTML=data.map(x=>`<div class="item"><div class="itemTop"><b>${x.date||''} 朝活${x.morningDay||'-'}日目</b><span>${x.wakeTime||''}</span></div><div><span class="pill">禁煙${x.noSmokeDay||'-'}日</span><span class="pill">英語${x.englishMin||0}分</span><span class="pill">読書${x.readingMin||0}分</span><span class="pill">腕${x.pushup||0}</span></div><p>${escapeHtml(x.logText||'')}</p><div class="actions"><button class="btn secondary" onclick="editItem('${x.id}')">編集</button><button class="btn danger" onclick="deleteItem('${x.id}')">削除</button></div></div>`).join('')}
+function thisMonthData(){const now=new Date(); const ym=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0'); return load().filter(x=>(x.date||'').startsWith(ym));}
+function sum(arr,k){return arr.reduce((a,x)=>a+(Number(x[k])||0),0)} function max(arr,k){return arr.reduce((m,x)=>Math.max(m,Number(x[k])||0),0)}
+function renderHome(){const m=thisMonthData(); const stats=[['朝活記録',m.length+'日'],['英語時間',sum(m,'englishMin')+'分'],['読書時間',sum(m,'readingMin')+'分'],['筋トレ合計',sum(m,'squat')+sum(m,'pushup')+sum(m,'situp')+sum(m,'back')+'回'],['X投稿',m.filter(x=>x.postedX).length+'回'],['ストーリー',m.filter(x=>x.postedStory).length+'回'],['note',m.filter(x=>x.postedNote).length+'本'],['最新体重',latest('weight')||'-']]; document.getElementById('monthlyStats').innerHTML=stats.map(s=>`<div class="stat"><b>${s[1]}</b><span>${s[0]}</span></div>`).join(''); document.getElementById('bestStats').innerHTML=`<span class="pill">英語最長 ${max(m,'englishMin')}分</span><span class="pill">読書最長 ${max(m,'readingMin')}分</span><span class="pill">腕立て最高 ${max(m,'pushup')}回</span><span class="pill">スクワット最高 ${max(m,'squat')}回</span>`; const day=new Date().getDate(); const pct=Math.min(100,Math.round(m.length/day*100)); document.getElementById('monthBar').style.width=pct+'%'; document.getElementById('monthBarText').textContent=`今月${day}日中 ${m.length}日記録 / 記録率 ${pct}%`; document.getElementById('monthMemo').value=localStorage.getItem(MEMO_KEY)||'';}
+function latest(k){const d=load().find(x=>x[k]!==''&&x[k]!=null); return d?d[k]:''}
+function saveMemo(){localStorage.setItem(MEMO_KEY,document.getElementById('monthMemo').value); alert('メモ保存しました')}
+function generateX(){const x=load()[0]; const box=document.getElementById('xText'); if(!x){box.textContent='まだログがありません。';return;} box.textContent=`朝活${x.morningDay||'-'}日目 / 禁煙${x.noSmokeDay||'-'}日目\n\n✅ 英語 ${x.englishMin||0}分\n✅ 読書 ${x.readingMin||0}分\n✅ スクワット ${x.squat||0} / 腕立て ${x.pushup||0} / 腹筋 ${x.situp||0} / 背筋 ${x.back||0}\n\n${x.logText||''}\n\n#朝活 #習慣化`;}
+function copyX(){navigator.clipboard.writeText(document.getElementById('xText').textContent).then(()=>alert('コピーしました'))}
+function exportCSV(){const data=load(); const headers=['date','wakeTime','morningDay','noSmokeDay','englishMin','readingMin','squat','pushup','situp','back','weight','fat','muscle','postedX','postedStory','postedNote','logText']; const rows=[headers.join(',')].concat(data.map(x=>headers.map(h=>'"'+String(x[h]??'').replaceAll('"','""')+'"').join(','))); const blob=new Blob([rows.join('\n')],{type:'text/csv;charset=utf-8'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='morning-log-backup.csv'; a.click();}
+function importCSV(e){alert('CSV読込は次版で強化予定。まずは出力バックアップを使ってください。'); e.target.value='';}
+function clearAll(){if(confirm('全ログを削除します。CSV出力済みですか？')){localStorage.removeItem(KEY);renderHome();renderHistory();}}
+function renderSettings(){const box=document.getElementById('labelSettings'); box.innerHTML=Object.entries(labels).map(([k,v])=>`<div class="editLabel"><label>${v}</label><button class="pen" onclick="renameLabel('${k}')">✏️</button></div>`).join('')}
+function renameLabel(k){const n=prompt('項目名を変更',labels[k]); if(!n)return; labels[k]=n; localStorage.setItem(LABEL_KEY,JSON.stringify(labels)); renderRoutine(); renderSettings();}
+function escapeHtml(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+document.addEventListener('DOMContentLoaded',()=>{renderRoutine(); initTabs(); document.getElementById('logForm').addEventListener('submit',handleSubmit); resetForm(); renderHome();});
+</script>
+</body>
+</html>
