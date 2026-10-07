@@ -1,1 +1,1807 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>朝活ログ v6</title>
 
+<style>
+:root{
+  --bg:#f5fbf3;
+  --card:#ffffff;
+  --main:#55c95a;
+  --main-dark:#176b2c;
+  --main-soft:#e9fbe7;
+  --dark:#17351e;
+  --muted:#718076;
+  --line:#dcebdd;
+  --yellow:#fff5cf;
+  --shadow:0 8px 25px rgba(25,70,35,.08);
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:linear-gradient(180deg,#f4fff1,#fbfdf9);
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;
+  color:var(--dark);
+}
+
+header{
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:rgba(245,251,243,.94);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+  padding:16px 18px 12px;
+}
+
+header h1{
+  margin:0;
+  font-size:23px;
+  font-weight:900;
+}
+
+.sub{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:4px;
+}
+
+.wrap{
+  max-width:850px;
+  margin:0 auto;
+  padding:12px 14px 105px;
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:18px;
+  margin:13px 0;
+  box-shadow:var(--shadow);
+}
+
+.hero{
+  background:linear-gradient(135deg,#efffec,#ffffff);
+}
+
+h2{
+  font-size:20px;
+  margin:0 0 14px;
+}
+
+h3{
+  font-size:15px;
+  margin:18px 0 8px;
+}
+
+.bigDate{
+  font-size:25px;
+  font-weight:900;
+}
+
+.small{
+  font-size:12px;
+  color:var(--muted);
+}
+
+.grid3{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:9px;
+}
+
+.grid2{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:9px;
+}
+
+.stat{
+  border:1px solid var(--line);
+  border-radius:17px;
+  padding:12px;
+  background:#fbfffa;
+}
+
+.stat b{
+  display:block;
+  font-size:23px;
+  color:var(--main-dark);
+}
+
+.stat span{
+  color:var(--muted);
+  font-size:11px;
+}
+
+label{
+  display:block;
+  font-weight:800;
+  font-size:13px;
+  margin:12px 0 6px;
+}
+
+input,textarea{
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:15px;
+  padding:13px;
+  background:white;
+  font-size:16px;
+  color:var(--dark);
+}
+
+textarea{
+  min-height:80px;
+  resize:vertical;
+}
+
+.rangeWrap{
+  display:grid;
+  grid-template-columns:1fr 58px;
+  gap:10px;
+  align-items:center;
+}
+
+input[type="range"]{
+  padding:0;
+  accent-color:var(--main);
+}
+
+.score{
+  text-align:center;
+  font-size:20px;
+  font-weight:900;
+  color:var(--main-dark);
+}
+
+.btn{
+  border:0;
+  border-radius:17px;
+  padding:14px 16px;
+  font-size:15px;
+  font-weight:900;
+  cursor:pointer;
+  background:var(--main);
+  color:#103716;
+}
+
+.btn.secondary{
+  background:var(--main-soft);
+  color:var(--main-dark);
+}
+
+.btn.danger{
+  background:#ffe8e7;
+  color:#922820;
+}
+
+.full{width:100%}
+
+.actions{
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap;
+  margin-top:15px;
+}
+
+.pill{
+  display:inline-block;
+  border-radius:999px;
+  background:var(--main-soft);
+  color:var(--main-dark);
+  font-size:12px;
+  font-weight:800;
+  padding:6px 10px;
+  margin:3px 3px 3px 0;
+}
+
+.win{
+  padding:11px 0;
+  border-bottom:1px solid var(--line);
+}
+
+.win:last-child{border:0}
+
+.priority{
+  display:flex;
+  gap:10px;
+  padding:8px 0;
+}
+
+.priorityNumber{
+  width:28px;
+  height:28px;
+  flex:0 0 28px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--main-soft);
+  color:var(--main-dark);
+  font-weight:900;
+}
+
+.tabs{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  z-index:99;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:4px;
+  background:rgba(255,255,255,.96);
+  border-top:1px solid var(--line);
+  padding:7px 7px calc(7px + env(safe-area-inset-bottom));
+}
+
+.tab{
+  border:0;
+  background:transparent;
+  border-radius:13px;
+  padding:9px 2px;
+  font-weight:800;
+  color:#637568;
+}
+
+.tab.active{
+  background:var(--main-soft);
+  color:var(--main-dark);
+}
+
+.page{display:none}
+.page.active{display:block}
+
+.historyItem{
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:14px;
+  margin:10px 0;
+}
+
+.historyTop{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.notice{
+  background:var(--yellow);
+  border:1px solid #f2df91;
+  border-radius:15px;
+  padding:12px;
+  font-size:13px;
+}
+
+.bar{
+  background:#e7f1e5;
+  height:12px;
+  border-radius:999px;
+  overflow:hidden;
+  margin-top:7px;
+}
+
+.bar > div{
+  height:100%;
+  background:var(--main);
+  width:0%;
+}
+
+.empty{
+  text-align:center;
+  color:var(--muted);
+  padding:20px 5px;
+}
+
+@media(min-width:700px){
+  .grid3{grid-template-columns:repeat(3,1fr)}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🌱 朝活ログ v6</h1>
+  <div class="sub">朝10分・夜10分。積み上げは、勝手に見える。</div>
+</header>
+
+<div class="wrap">
+
+<!-- ================= HOME ================= -->
+
+<section id="home" class="page active">
+
+  <div class="card hero">
+    <div class="small">TODAY</div>
+    <div id="homeDate" class="bigDate"></div>
+    <p id="homeMessage">今日もちょっと積む。</p>
+
+    <div class="grid3">
+      <div class="stat">
+        <b id="homeEnergy">-</b>
+        <span>体力</span>
+      </div>
+
+      <div class="stat">
+        <b id="homeBrain">-</b>
+        <span>頭</span>
+      </div>
+
+      <div class="stat">
+        <b id="homeWork">-</b>
+        <span>仕事</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🎯 今日の3つ</h2>
+    <div id="homePriorities"></div>
+  </div>
+
+  <div class="card">
+    <h2>📈 TODAY'S PROGRESS</h2>
+
+    <div class="grid3">
+      <div class="stat">
+        <b id="homeEnglish">0</b>
+        <span>英語 min</span>
+      </div>
+
+      <div class="stat">
+        <b id="homeReading">0</b>
+        <span>読書 min</span>
+      </div>
+
+      <div class="stat">
+        <b id="homeExercise">0</b>
+        <span>運動 min</span>
+      </div>
+    </div>
+
+    <div id="homeOutput" style="margin-top:12px"></div>
+  </div>
+
+  <div class="card">
+    <h2>🏆 TODAY'S WINS</h2>
+    <div id="homeWins"></div>
+  </div>
+
+  <div class="grid2">
+    <button class="btn" onclick="showPage('morning')">
+      ☀️ 朝を記録
+    </button>
+
+    <button class="btn secondary" onclick="showPage('night')">
+      🌙 夜を記録
+    </button>
+  </div>
+
+</section>
+
+
+<!-- ================= MORNING ================= -->
+
+<section id="morning" class="page">
+
+  <form id="morningForm" class="card">
+
+    <h2>☀️ MORNING CHECK</h2>
+    <p class="small">考えすぎない。10分以内で終了。</p>
+
+    <label>日付</label>
+    <input type="date" id="morningDate">
+
+    <div class="grid2">
+
+      <div>
+        <label>起床時間</label>
+        <input type="time" id="wakeTime">
+      </div>
+
+      <div>
+        <label>睡眠時間</label>
+        <input type="number" step="0.1" id="sleepHours" placeholder="7.5">
+      </div>
+
+    </div>
+
+
+    <h3>今日のコンディション</h3>
+
+    <label>体力</label>
+    <div class="rangeWrap">
+      <input type="range" id="energy" min="0" max="100" step="5">
+      <div class="score" id="energyValue">70</div>
+    </div>
+
+    <label>頭のスッキリ度</label>
+    <div class="rangeWrap">
+      <input type="range" id="brain" min="0" max="100" step="5">
+      <div class="score" id="brainValue">70</div>
+    </div>
+
+    <label>仕事モチベ</label>
+    <div class="rangeWrap">
+      <input type="range" id="work" min="0" max="100" step="5">
+      <div class="score" id="workValue">70</div>
+    </div>
+
+
+    <h3>🎯 今日の最重要3つ</h3>
+
+    <input id="priority1" placeholder="① 今日いちばん大事なこと">
+
+    <div style="height:8px"></div>
+
+    <input id="priority2" placeholder="② できたら進めたいこと">
+
+    <div style="height:8px"></div>
+
+    <input id="priority3" placeholder="③ 生活・自分のためのこと">
+
+
+    <label>今日、どんな日にする？</label>
+    <textarea id="morningNote"
+      placeholder="例：欲張らず、仕事で一つ成果を出す。"></textarea>
+
+    <div class="actions">
+      <button class="btn full" type="submit">
+        ☀️ 朝を保存
+      </button>
+    </div>
+
+  </form>
+
+</section>
+
+
+<!-- ================= NIGHT ================= -->
+
+<section id="night" class="page">
+
+  <form id="nightForm" class="card">
+
+    <h2>🌙 NIGHT CHECK</h2>
+    <p class="small">今日を採点する。細かく管理しすぎない。</p>
+
+    <label>日付</label>
+    <input type="date" id="nightDate">
+
+
+    <h3>📚 今日の積み上げ</h3>
+
+    <div class="grid3">
+
+      <div>
+        <label>英語</label>
+        <input type="number" id="englishMin" placeholder="分">
+      </div>
+
+      <div>
+        <label>読書</label>
+        <input type="number" id="readingMin" placeholder="分">
+      </div>
+
+      <div>
+        <label>運動</label>
+        <input type="number" id="exerciseMin" placeholder="分">
+      </div>
+
+    </div>
+
+
+    <label>英語メモ</label>
+    <input id="englishMemo"
+      placeholder="例：単語168問 / Full House 4話 / 英会話20分">
+
+
+    <label>読書・学びメモ</label>
+    <input id="learningMemo"
+      placeholder="本、勉強、気づきなど">
+
+
+    <label>発信</label>
+    <select id="outputDone"
+      style="width:100%;border:1px solid var(--line);border-radius:15px;padding:13px;background:#fff;font-size:16px">
+
+      <option value="">未入力</option>
+      <option value="1">発信した ✓</option>
+      <option value="0">今日はなし</option>
+
+    </select>
+
+
+    <h3>🏆 今日の成果</h3>
+
+    <input id="win1" placeholder="① 今日できたこと">
+
+    <div style="height:8px"></div>
+
+    <input id="win2" placeholder="② 今日できたこと">
+
+    <div style="height:8px"></div>
+
+    <input id="win3" placeholder="③ 今日できたこと">
+
+
+    <label>今日の満足度</label>
+
+    <div class="rangeWrap">
+      <input type="range"
+        id="satisfaction"
+        min="0"
+        max="100"
+        step="5">
+
+      <div class="score"
+        id="satisfactionValue">70</div>
+    </div>
+
+
+    <label>今日のひとこと</label>
+
+    <textarea id="nightNote"
+      placeholder="例：英語は難しい。でも以前より会話が続く。"></textarea>
+
+
+    <div class="actions">
+      <button class="btn full" type="submit">
+        🌙 今日を保存
+      </button>
+    </div>
+
+  </form>
+
+</section>
+
+
+<!-- ================= HISTORY ================= -->
+
+<section id="history" class="page">
+
+  <div class="card">
+    <h2>📅 履歴</h2>
+    <div id="historyList"></div>
+  </div>
+
+</section>
+
+
+<!-- ================= GROWTH ================= -->
+
+<section id="growth" class="page">
+
+  <div class="card hero">
+
+    <h2>🌱 今月の積み上げ</h2>
+
+    <div class="grid3">
+
+      <div class="stat">
+        <b id="monthEnglish">0</b>
+        <span>英語 min</span>
+      </div>
+
+      <div class="stat">
+        <b id="monthReading">0</b>
+        <span>読書 min</span>
+      </div>
+
+      <div class="stat">
+        <b id="monthExercise">0</b>
+        <span>運動 min</span>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="card">
+
+    <h2>☀️ 朝ログ率</h2>
+
+    <div class="bar">
+      <div id="morningRateBar"></div>
+    </div>
+
+    <p id="morningRateText" class="small"></p>
+
+  </div>
+
+
+  <div class="card">
+
+    <h2>🧠 平均コンディション</h2>
+
+    <div class="grid3">
+
+      <div class="stat">
+        <b id="avgEnergy">-</b>
+        <span>体力</span>
+      </div>
+
+      <div class="stat">
+        <b id="avgBrain">-</b>
+        <span>頭</span>
+      </div>
+
+      <div class="stat">
+        <b id="avgWork">-</b>
+        <span>仕事</span>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="card">
+
+    <h2>🏆 今月の成果</h2>
+
+    <div id="monthWins"></div>
+
+  </div>
+
+
+  <div class="card">
+
+    <h2>💾 データ</h2>
+
+    <div class="notice">
+      データはこのブラウザ内に保存されています。
+      定期的にバックアップしてください。
+    </div>
+
+    <div class="actions">
+
+      <button class="btn secondary"
+        onclick="exportJSON()">
+        バックアップ
+      </button>
+
+      <label class="btn secondary">
+        復元
+        <input
+          type="file"
+          accept=".json"
+          onchange="importJSON(event)"
+          style="display:none">
+      </label>
+
+      <button class="btn danger"
+        onclick="clearAll()">
+        全削除
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+</div>
+
+
+<!-- ================= NAV ================= -->
+
+<nav class="tabs">
+
+  <button class="tab active"
+    data-page="home">
+    今日
+  </button>
+
+  <button class="tab"
+    data-page="morning">
+    ☀️ 朝
+  </button>
+
+  <button class="tab"
+    data-page="night">
+    🌙 夜
+  </button>
+
+  <button class="tab"
+    data-page="growth">
+    成長
+  </button>
+
+</nav>
+
+
+<script>
+
+/* =========================
+   STORAGE
+========================= */
+
+const KEY = 'kurataro_daily_log_v6';
+
+
+function loadData(){
+  return JSON.parse(
+    localStorage.getItem(KEY) || '{}'
+  );
+}
+
+
+function saveData(data){
+  localStorage.setItem(
+    KEY,
+    JSON.stringify(data)
+  );
+}
+
+
+/* =========================
+   DATE
+========================= */
+
+function todayISO(){
+
+  const d = new Date();
+
+  return (
+    d.getFullYear() + '-' +
+    String(d.getMonth()+1).padStart(2,'0') + '-' +
+    String(d.getDate()).padStart(2,'0')
+  );
+}
+
+
+function prettyDate(date){
+
+  if(!date) return '';
+
+  const d = new Date(date + 'T00:00:00');
+
+  const days =
+    ['日','月','火','水','木','金','土'];
+
+  return (
+    `${d.getFullYear()}年` +
+    `${d.getMonth()+1}月` +
+    `${d.getDate()}日（${days[d.getDay()]}）`
+  );
+}
+
+
+/* =========================
+   HELPERS
+========================= */
+
+function value(id){
+  return document.getElementById(id).value;
+}
+
+
+function numberValue(id){
+
+  const v = value(id);
+
+  return v === ''
+    ? ''
+    : Number(v);
+}
+
+
+function setValue(id,v){
+
+  document.getElementById(id).value =
+    v ?? '';
+}
+
+
+function escapeHtml(str){
+
+  return String(str ?? '')
+    .replace(
+      /[&<>"]/g,
+      c => ({
+        '&':'&amp;',
+        '<':'&lt;',
+        '>':'&gt;',
+        '"':'&quot;'
+      }[c])
+    );
+}
+
+
+/* =========================
+   TABS
+========================= */
+
+function initTabs(){
+
+  document
+    .querySelectorAll('.tab')
+    .forEach(btn => {
+
+      btn.onclick = () =>
+        showPage(btn.dataset.page);
+
+    });
+
+}
+
+
+function showPage(id){
+
+  document
+    .querySelectorAll('.page')
+    .forEach(p =>
+      p.classList.remove('active')
+    );
+
+  document
+    .getElementById(id)
+    .classList.add('active');
+
+
+  document
+    .querySelectorAll('.tab')
+    .forEach(t =>
+      t.classList.toggle(
+        'active',
+        t.dataset.page === id
+      )
+    );
+
+
+  if(id === 'home')
+    renderHome();
+
+  if(id === 'growth')
+    renderGrowth();
+
+  window.scrollTo(0,0);
+}
+
+
+/* =========================
+   RANGE
+========================= */
+
+function bindRange(id,valueId){
+
+  const input =
+    document.getElementById(id);
+
+  const out =
+    document.getElementById(valueId);
+
+  const update = () =>
+    out.textContent = input.value;
+
+  input.addEventListener(
+    'input',
+    update
+  );
+
+  update();
+}
+
+
+/* =========================
+   MORNING SAVE
+========================= */
+
+function saveMorning(e){
+
+  e.preventDefault();
+
+  const date =
+    value('morningDate');
+
+  const data =
+    loadData();
+
+  if(!data[date])
+    data[date] = {date};
+
+
+  data[date].morning = {
+
+    wakeTime:
+      value('wakeTime'),
+
+    sleepHours:
+      numberValue('sleepHours'),
+
+    energy:
+      numberValue('energy'),
+
+    brain:
+      numberValue('brain'),
+
+    work:
+      numberValue('work'),
+
+    priorities:[
+      value('priority1'),
+      value('priority2'),
+      value('priority3')
+    ],
+
+    note:
+      value('morningNote'),
+
+    savedAt:
+      new Date().toISOString()
+  };
+
+
+  saveData(data);
+
+  alert('朝ログ保存しました ☀️');
+
+  renderHome();
+
+  showPage('home');
+}
+
+
+/* =========================
+   NIGHT SAVE
+========================= */
+
+function saveNight(e){
+
+  e.preventDefault();
+
+  const date =
+    value('nightDate');
+
+  const data =
+    loadData();
+
+  if(!data[date])
+    data[date] = {date};
+
+
+  data[date].night = {
+
+    englishMin:
+      numberValue('englishMin'),
+
+    readingMin:
+      numberValue('readingMin'),
+
+    exerciseMin:
+      numberValue('exerciseMin'),
+
+    englishMemo:
+      value('englishMemo'),
+
+    learningMemo:
+      value('learningMemo'),
+
+    outputDone:
+      value('outputDone'),
+
+    wins:[
+      value('win1'),
+      value('win2'),
+      value('win3')
+    ],
+
+    satisfaction:
+      numberValue('satisfaction'),
+
+    note:
+      value('nightNote'),
+
+    savedAt:
+      new Date().toISOString()
+  };
+
+
+  saveData(data);
+
+  alert('今日もおつかれ 🌙');
+
+  renderHome();
+
+  showPage('home');
+}
+
+
+/* =========================
+   LOAD FORMS
+========================= */
+
+function loadTodayForms(){
+
+  const date =
+    todayISO();
+
+  setValue(
+    'morningDate',
+    date
+  );
+
+  setValue(
+    'nightDate',
+    date
+  );
+
+
+  const data =
+    loadData();
+
+  const item =
+    data[date];
+
+
+  if(!item) return;
+
+
+  if(item.morning){
+
+    const m =
+      item.morning;
+
+    setValue(
+      'wakeTime',
+      m.wakeTime
+    );
+
+    setValue(
+      'sleepHours',
+      m.sleepHours
+    );
+
+    setValue(
+      'energy',
+      m.energy ?? 70
+    );
+
+    setValue(
+      'brain',
+      m.brain ?? 70
+    );
+
+    setValue(
+      'work',
+      m.work ?? 70
+    );
+
+    setValue(
+      'priority1',
+      m.priorities?.[0]
+    );
+
+    setValue(
+      'priority2',
+      m.priorities?.[1]
+    );
+
+    setValue(
+      'priority3',
+      m.priorities?.[2]
+    );
+
+    setValue(
+      'morningNote',
+      m.note
+    );
+  }
+
+
+  if(item.night){
+
+    const n =
+      item.night;
+
+    setValue(
+      'englishMin',
+      n.englishMin
+    );
+
+    setValue(
+      'readingMin',
+      n.readingMin
+    );
+
+    setValue(
+      'exerciseMin',
+      n.exerciseMin
+    );
+
+    setValue(
+      'englishMemo',
+      n.englishMemo
+    );
+
+    setValue(
+      'learningMemo',
+      n.learningMemo
+    );
+
+    setValue(
+      'outputDone',
+      n.outputDone
+    );
+
+    setValue(
+      'win1',
+      n.wins?.[0]
+    );
+
+    setValue(
+      'win2',
+      n.wins?.[1]
+    );
+
+    setValue(
+      'win3',
+      n.wins?.[2]
+    );
+
+    setValue(
+      'satisfaction',
+      n.satisfaction ?? 70
+    );
+
+    setValue(
+      'nightNote',
+      n.note
+    );
+  }
+}
+
+
+/* =========================
+   HOME
+========================= */
+
+function renderHome(){
+
+  const date =
+    todayISO();
+
+  document
+    .getElementById('homeDate')
+    .textContent =
+      prettyDate(date);
+
+
+  const data =
+    loadData();
+
+  const item =
+    data[date] || {};
+
+  const m =
+    item.morning || {};
+
+  const n =
+    item.night || {};
+
+
+  document
+    .getElementById('homeEnergy')
+    .textContent =
+      m.energy ?? '-';
+
+  document
+    .getElementById('homeBrain')
+    .textContent =
+      m.brain ?? '-';
+
+  document
+    .getElementById('homeWork')
+    .textContent =
+      m.work ?? '-';
+
+
+  const priorities =
+    (m.priorities || [])
+    .filter(Boolean);
+
+
+  const priorityBox =
+    document.getElementById(
+      'homePriorities'
+    );
+
+
+  if(priorities.length){
+
+    priorityBox.innerHTML =
+      priorities
+      .map((p,i) => `
+        <div class="priority">
+
+          <div class="priorityNumber">
+            ${i+1}
+          </div>
+
+          <div>
+            ${escapeHtml(p)}
+          </div>
+
+        </div>
+      `)
+      .join('');
+
+  }else{
+
+    priorityBox.innerHTML =
+      '<div class="empty">朝ログはまだです ☀️</div>';
+  }
+
+
+  document
+    .getElementById('homeEnglish')
+    .textContent =
+      n.englishMin || 0;
+
+  document
+    .getElementById('homeReading')
+    .textContent =
+      n.readingMin || 0;
+
+  document
+    .getElementById('homeExercise')
+    .textContent =
+      n.exerciseMin || 0;
+
+
+  const output =
+    document.getElementById(
+      'homeOutput'
+    );
+
+
+  if(n.outputDone === '1'){
+
+    output.innerHTML =
+      '<span class="pill">✍️ 発信した ✓</span>';
+
+  }else if(n.outputDone === '0'){
+
+    output.innerHTML =
+      '<span class="pill">今日は発信なし</span>';
+
+  }else{
+
+    output.innerHTML = '';
+  }
+
+
+  const wins =
+    (n.wins || [])
+    .filter(Boolean);
+
+
+  const winBox =
+    document.getElementById(
+      'homeWins'
+    );
+
+
+  if(wins.length){
+
+    winBox.innerHTML =
+      wins
+      .map(w => `
+        <div class="win">
+          🏆 ${escapeHtml(w)}
+        </div>
+      `)
+      .join('');
+
+  }else{
+
+    winBox.innerHTML =
+      '<div class="empty">夜に今日の成果を残そう 🌙</div>';
+  }
+
+}
+
+
+/* =========================
+   HISTORY
+========================= */
+
+function renderHistory(){
+
+  const data =
+    loadData();
+
+  const items =
+    Object.values(data)
+      .sort(
+        (a,b) =>
+          b.date.localeCompare(a.date)
+      );
+
+
+  const box =
+    document.getElementById(
+      'historyList'
+    );
+
+
+  if(!items.length){
+
+    box.innerHTML =
+      '<div class="empty">まだ記録がありません。</div>';
+
+    return;
+  }
+
+
+  box.innerHTML =
+    items.map(item => {
+
+      const m =
+        item.morning || {};
+
+      const n =
+        item.night || {};
+
+      const wins =
+        (n.wins || [])
+        .filter(Boolean);
+
+
+      return `
+
+        <div class="historyItem">
+
+          <div class="historyTop">
+
+            <b>
+              ${prettyDate(item.date)}
+            </b>
+
+            <span class="small">
+              ${m.wakeTime || ''}
+            </span>
+
+          </div>
+
+          <div style="margin-top:8px">
+
+            <span class="pill">
+              体力 ${m.energy ?? '-'}
+            </span>
+
+            <span class="pill">
+              頭 ${m.brain ?? '-'}
+            </span>
+
+            <span class="pill">
+              仕事 ${m.work ?? '-'}
+            </span>
+
+          </div>
+
+          <div>
+
+            <span class="pill">
+              🇬🇧 ${n.englishMin || 0}分
+            </span>
+
+            <span class="pill">
+              📚 ${n.readingMin || 0}分
+            </span>
+
+            <span class="pill">
+              🏃 ${n.exerciseMin || 0}分
+            </span>
+
+          </div>
+
+          ${
+            wins.length
+            ? `<p>🏆 ${escapeHtml(wins.join(' / '))}</p>`
+            : ''
+          }
+
+          ${
+            n.note
+            ? `<p>${escapeHtml(n.note)}</p>`
+            : ''
+          }
+
+        </div>
+
+      `;
+
+    }).join('');
+
+}
+
+
+/* =========================
+   GROWTH
+========================= */
+
+function renderGrowth(){
+
+  const data =
+    Object.values(
+      loadData()
+    );
+
+
+  const now =
+    new Date();
+
+  const ym =
+    now.getFullYear() +
+    '-' +
+    String(
+      now.getMonth()+1
+    ).padStart(2,'0');
+
+
+  const month =
+    data.filter(
+      x =>
+        x.date &&
+        x.date.startsWith(ym)
+    );
+
+
+  const sumNight =
+    key =>
+      month.reduce(
+        (total,x) =>
+          total +
+          (
+            Number(
+              x.night?.[key]
+            ) || 0
+          ),
+        0
+      );
+
+
+  document
+    .getElementById('monthEnglish')
+    .textContent =
+      sumNight('englishMin');
+
+
+  document
+    .getElementById('monthReading')
+    .textContent =
+      sumNight('readingMin');
+
+
+  document
+    .getElementById('monthExercise')
+    .textContent =
+      sumNight('exerciseMin');
+
+
+  const morningLogs =
+    month.filter(
+      x => x.morning
+    );
+
+
+  const day =
+    now.getDate();
+
+
+  const rate =
+    Math.min(
+      100,
+      Math.round(
+        morningLogs.length /
+        day *
+        100
+      )
+    );
+
+
+  document
+    .getElementById('morningRateBar')
+    .style.width =
+      rate + '%';
+
+
+  document
+    .getElementById('morningRateText')
+    .textContent =
+      `${day}日中 ${morningLogs.length}日記録 / ${rate}%`;
+
+
+  function average(key){
+
+    const values =
+      morningLogs
+      .map(
+        x =>
+          Number(
+            x.morning?.[key]
+          )
+      )
+      .filter(
+        x =>
+          !Number.isNaN(x)
+      );
+
+
+    if(!values.length)
+      return '-';
+
+
+    return Math.round(
+      values.reduce(
+        (a,b) => a+b,
+        0
+      ) /
+      values.length
+    );
+  }
+
+
+  document
+    .getElementById('avgEnergy')
+    .textContent =
+      average('energy');
+
+
+  document
+    .getElementById('avgBrain')
+    .textContent =
+      average('brain');
+
+
+  document
+    .getElementById('avgWork')
+    .textContent =
+      average('work');
+
+
+  const wins =
+    month
+    .flatMap(
+      x =>
+        x.night?.wins || []
+    )
+    .filter(Boolean)
+    .reverse();
+
+
+  const winBox =
+    document.getElementById(
+      'monthWins'
+    );
+
+
+  if(wins.length){
+
+    winBox.innerHTML =
+      wins
+      .map(
+        w =>
+          `<div class="win">🏆 ${escapeHtml(w)}</div>`
+      )
+      .join('');
+
+  }else{
+
+    winBox.innerHTML =
+      '<div class="empty">まだ成果ログがありません。</div>';
+  }
+
+}
+
+
+/* =========================
+   BACKUP
+========================= */
+
+function exportJSON(){
+
+  const data =
+    localStorage.getItem(KEY) || '{}';
+
+  const blob =
+    new Blob(
+      [data],
+      {
+        type:
+          'application/json'
+      }
+    );
+
+
+  const a =
+    document.createElement('a');
+
+  a.href =
+    URL.createObjectURL(blob);
+
+  a.download =
+    `kurataro-log-${todayISO()}.json`;
+
+  a.click();
+
+  URL.revokeObjectURL(a.href);
+}
+
+
+function importJSON(event){
+
+  const file =
+    event.target.files[0];
+
+  if(!file) return;
+
+
+  const reader =
+    new FileReader();
+
+
+  reader.onload =
+    e => {
+
+      try{
+
+        const data =
+          JSON.parse(
+            e.target.result
+          );
+
+        localStorage.setItem(
+          KEY,
+          JSON.stringify(data)
+        );
+
+        alert(
+          'バックアップを復元しました'
+        );
+
+        location.reload();
+
+      }catch{
+
+        alert(
+          'JSONファイルを読み込めませんでした'
+        );
+
+      }
+
+    };
+
+
+  reader.readAsText(file);
+
+}
+
+
+function clearAll(){
+
+  if(
+    !confirm(
+      '全記録を削除します。バックアップ済みですか？'
+    )
+  ) return;
+
+
+  localStorage.removeItem(KEY);
+
+  location.reload();
+}
+
+
+/* =========================
+   INIT
+========================= */
+
+document.addEventListener(
+  'DOMContentLoaded',
+  () => {
+
+    initTabs();
+
+    bindRange(
+      'energy',
+      'energyValue'
+    );
+
+    bindRange(
+      'brain',
+      'brainValue'
+    );
+
+    bindRange(
+      'work',
+      'workValue'
+    );
+
+    bindRange(
+      'satisfaction',
+      'satisfactionValue'
+    );
+
+
+    document
+      .getElementById(
+        'morningForm'
+      )
+      .addEventListener(
+        'submit',
+        saveMorning
+      );
+
+
+    document
+      .getElementById(
+        'nightForm'
+      )
+      .addEventListener(
+        'submit',
+        saveNight
+      );
+
+
+    setValue(
+      'morningDate',
+      todayISO()
+    );
+
+    setValue(
+      'nightDate',
+      todayISO()
+    );
+
+
+    setValue('energy',70);
+    setValue('brain',70);
+    setValue('work',70);
+    setValue('satisfaction',70);
+
+
+    loadTodayForms();
+
+    /* range表示を読み込んだ値に合わせる */
+
+    document
+      .getElementById('energyValue')
+      .textContent =
+        document.getElementById('energy').value;
+
+    document
+      .getElementById('brainValue')
+      .textContent =
+        document.getElementById('brain').value;
+
+    document
+      .getElementById('workValue')
+      .textContent =
+        document.getElementById('work').value;
+
+    document
+      .getElementById('satisfactionValue')
+      .textContent =
+        document.getElementById('satisfaction').value;
+
+
+    renderHome();
+
+  }
+);
+
+</script>
+
+</body>
+</html>
